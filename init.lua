@@ -7,6 +7,17 @@ if not (vim.env.LAZY or (vim.uv or vim.loop).fs_stat(lazypath)) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- vim.cmd([[autocmd BufEnter * Neotree]])
+vim.api.nvim_create_autocmd("VimEnter", {
+    pattern = "*",
+    callback = function()
+      if vim.fn.argc() == 0 and vim.bo.filetype == "" then
+        require("neo-tree.command").execute({ action = "show" })
+      end
+    end,
+  })
+
+
 -- validate that lazy is available
 if not pcall(require, "lazy") then
   -- stylua: ignore
