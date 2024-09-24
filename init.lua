@@ -9,14 +9,17 @@ vim.opt.rtp:prepend(lazypath)
 
 -- vim.cmd([[autocmd BufEnter * Neotree]])
 vim.api.nvim_create_autocmd("VimEnter", {
-    pattern = "*",
-    callback = function()
-      if vim.fn.argc() == 0 and vim.bo.filetype == "" then
-        require("neo-tree.command").execute({ action = "show" })
-      end
-    end,
-  })
+  pattern = "*",
+  callback = function()
+    -- Verificar si no hay archivos abiertos y estamos en la pantalla de inicio
+    local no_name = vim.api.nvim_buf_get_name(0) == "" -- buffer sin nombre
+    local argc = vim.fn.argc() == 0 -- no se pasaron archivos en el arranque
 
+    if argc and no_name then
+      require("neo-tree.command").execute({ action = "show" }) -- comando correcto
+    end
+  end,
+})
 
 -- validate that lazy is available
 if not pcall(require, "lazy") then
